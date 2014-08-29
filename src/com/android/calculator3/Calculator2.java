@@ -59,7 +59,7 @@ public class Calculator2 extends Activity implements PanelSwitcher.Listener, Log
     
     //清除按钮
     private View mClearButton;
-    //后退按钮
+    //删除按钮
     private View mBackspaceButton;
     //菜单按钮
     private View mOverflowMenuButton;
@@ -82,6 +82,9 @@ public class Calculator2 extends Activity implements PanelSwitcher.Listener, Log
 
         setContentView(R.layout.main); 
         
+        
+        //计算器的按钮区由两个组件切换实现（基本面板和高级面板，基本面板包括数字加减乘除，高级面板包括sin、cos等科学计算）
+        //这个ViewPager用来动态切换这两个面板
         mPager = (ViewPager) findViewById(R.id.panelswitch);
         if (mPager != null) {
             mPager.setAdapter(new PageAdapter(mPager));
@@ -105,6 +108,7 @@ public class Calculator2 extends Activity implements PanelSwitcher.Listener, Log
             mBackspaceButton.setOnLongClickListener(mListener);
         }
 
+        //初始化存储对象
         mPersist = new Persist(this);
         mPersist.load();
 
@@ -277,35 +281,48 @@ public class Calculator2 extends Activity implements PanelSwitcher.Listener, Log
         updateDeleteMode();
     }
 
+    
+    /**
+     * 页面切换适配器
+     *
+     */
     class PageAdapter extends PagerAdapter {
         private View mSimplePage;
         private View mAdvancedPage;
 
         public PageAdapter(ViewPager parent) {
-            final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            //根据父组件获取到布局加载器
+        	final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            
+        	//加载基本面板和高级面板布局
             final View simplePage = inflater.inflate(R.layout.simple_pad, parent, false);
             final View advancedPage = inflater.inflate(R.layout.advanced_pad, parent, false);
             mSimplePage = simplePage;
             mAdvancedPage = advancedPage;
 
+            //获取基本面板的按钮并设置监听器
             final Resources res = getResources();
             final TypedArray simpleButtons = res.obtainTypedArray(R.array.simple_buttons);
             for (int i = 0; i < simpleButtons.length(); i++) {
                 setOnClickListener(simplePage, simpleButtons.getResourceId(i, 0));
             }
+            //TODO
             simpleButtons.recycle();
 
+            //获取高级面板的按钮并设置监听器
             final TypedArray advancedButtons = res.obtainTypedArray(R.array.advanced_buttons);
             for (int i = 0; i < advancedButtons.length(); i++) {
                 setOnClickListener(advancedPage, advancedButtons.getResourceId(i, 0));
             }
             advancedButtons.recycle();
 
+            //基本面板的清除按钮
             final View clearButton = simplePage.findViewById(R.id.clear);
             if (clearButton != null) {
                 mClearButton = clearButton;
             }
 
+            //删除按钮
             final View backspaceButton = simplePage.findViewById(R.id.del);
             if (backspaceButton != null) {
                 mBackspaceButton = backspaceButton;
