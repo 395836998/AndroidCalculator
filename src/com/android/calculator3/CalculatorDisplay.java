@@ -36,6 +36,7 @@ class CalculatorDisplay extends ViewSwitcher {
     private static final int DEFAULT_MAX_DIGITS = 10;
 
     // only these chars are accepted from keyboard
+    //只能在输入框输入如下内容
     private static final char[] ACCEPTED_CHARS =
         "0123456789.+-*/\u2212\u00d7\u00f7()!%^".toCharArray();
 

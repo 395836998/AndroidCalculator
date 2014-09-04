@@ -112,35 +112,46 @@ public class Calculator2 extends Activity implements PanelSwitcher.Listener, Log
         mPersist = new Persist(this);
         mPersist.load();
 
+        //获取历史记录
         mHistory = mPersist.history;
 
         mDisplay = (CalculatorDisplay) findViewById(R.id.display);
 
+        //初始化逻辑控制对象
         mLogic = new Logic(this, mHistory, mDisplay);
         mLogic.setListener(this);
 
+        //初始化删除模式（是清除按钮还是回退删除按钮）
         mLogic.setDeleteMode(mPersist.getDeleteMode());
         mLogic.setLineLength(mDisplay.getMaxDigits());
 
+        //历史数据适配器
         HistoryAdapter historyAdapter = new HistoryAdapter(this, mHistory, mLogic);
         mHistory.setObserver(historyAdapter);
 
+        //设置输入区主面板
         if (mPager != null) {
             mPager.setCurrentItem(state == null ? 0 : state.getInt(STATE_CURRENT_VIEW, 0));
         }
 
+        //设置事件监听器的处理对象
         mListener.setHandler(mLogic, mPager);
+        //设置计算器显示区的事件监听器
         mDisplay.setOnKeyListener(mListener);
 
         if (!ViewConfiguration.get(this).hasPermanentMenuKey()) {
+        	//创建菜单
             createFakeMenu();
         }
 
+        //获取历史记录
         mLogic.resumeWithHistory();
+        //确定显示清除按钮还是删除按钮
         updateDeleteMode();
     }
 
     private void updateDeleteMode() {
+    	//切换清除和删除按钮的显示效果
         if (mLogic.getDeleteMode() == Logic.DELETE_MODE_BACKSPACE) {
             mClearButton.setVisibility(View.GONE);
             mBackspaceButton.setVisibility(View.VISIBLE);
@@ -278,6 +289,7 @@ public class Calculator2 extends Activity implements PanelSwitcher.Listener, Log
 
     @Override
     public void onDeleteModeChange() {
+    	//当Logic类中触发删除模式的变更时，更新按钮的显示
         updateDeleteMode();
     }
 

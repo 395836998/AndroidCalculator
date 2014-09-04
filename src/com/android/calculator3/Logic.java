@@ -33,10 +33,12 @@ import org.javia.arity.Symbols;
 import org.javia.arity.SyntaxException;
 
 class Logic {
+	
     private CalculatorDisplay mDisplay;
     private Symbols mSymbols = new Symbols();
     private History mHistory;
     private String  mResult = "";
+    
     private boolean mIsError = false;
     private int mLineLength = 0;
 
@@ -51,6 +53,7 @@ class Logic {
 
     static final char MINUS = '\u2212';
 
+    //错误操作提示信息
     private final String mErrorString;
 
     public final static int DELETE_MODE_BACKSPACE = 0;
@@ -58,6 +61,11 @@ class Logic {
 
     private int mDeleteMode = DELETE_MODE_BACKSPACE;
 
+    /**
+     * 业务逻辑对象监听删除模式改变的监听器
+     * @author lyanzhang
+     *
+     */
     public interface Listener {
         void onDeleteModeChange();
     }
@@ -67,8 +75,10 @@ class Logic {
     private Set<Entry<String, String>> mTranslationsSet;
 
     Logic(Context context, History history, CalculatorDisplay display) {
+    	//activity上下文
         mContext = context;
         mErrorString = mContext.getResources().getString(R.string.error);
+        
         mHistory = history;
         mDisplay = display;
         mDisplay.setLogic(this);
@@ -171,12 +181,14 @@ class Logic {
         if (mDeleteMode == DELETE_MODE_CLEAR) {
             clearWithHistory(false); // clear after an Enter on result
         } else {
+        	//计算表达式的结果
             evaluateAndShowResult(getText(), CalculatorDisplay.Scroll.UP);
         }
     }
 
     public void evaluateAndShowResult(String text, Scroll scroll) {
         try {
+        	//text为表达式（如58+6）
             String result = evaluate(text);
             if (!text.equals(result)) {
                 mHistory.enter(text);
@@ -224,6 +236,7 @@ class Logic {
         }
     }
 
+    //结果计算方法
     String evaluate(String input) throws SyntaxException {
         if (input.trim().equals("")) {
             return "";
@@ -237,6 +250,7 @@ class Logic {
         }
         // Find and replace any translated mathematical functions.
         input = replaceTranslations(input);
+        //调用arity包中的类计算表达式的结果
         double value = mSymbols.eval(input);
 
         String result = "";
@@ -305,6 +319,7 @@ class Logic {
         }
         if (period != -1) {
             // Strip trailing 0's
+        	//去掉结果值最后的所有0（如520.0000000会被处理为520）
             while (mantissa.length() > 0 && mantissa.endsWith("0")) {
                 mantissa = mantissa.substring(0, mantissa.length() - 1);
             }

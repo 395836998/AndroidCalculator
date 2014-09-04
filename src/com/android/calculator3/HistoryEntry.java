@@ -20,6 +20,11 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+/**
+ * 历史明细对象
+ * @author lyanzhang
+ *
+ */
 class HistoryEntry {
     private static final int VERSION_1 = 1;
     private String mBase;

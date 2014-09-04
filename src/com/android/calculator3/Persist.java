@@ -53,6 +53,7 @@ class Persist {
 
     public void load() {
         try {
+        	//从文件中读取保存的历史数据
             InputStream is = new BufferedInputStream(mContext.openFileInput(FILE_NAME), 8192);
             DataInputStream in = new DataInputStream(is);
             int version = in.readInt();
@@ -61,6 +62,7 @@ class Persist {
             } else if (version > LAST_VERSION) {
                 throw new IOException("data version " + version + "; expected " + LAST_VERSION);
             }
+            //创建历史对象
             history = new History(version, in);
             in.close();
         } catch (FileNotFoundException e) {

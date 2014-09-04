@@ -44,6 +44,7 @@ class ColorButton extends Button implements OnClickListener {
     }
 
     public void onClick(View view) {
+    	//每个按钮点击事件调用监听器处理
         mListener.onClick(this);
     }
 

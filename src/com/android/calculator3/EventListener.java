@@ -23,7 +23,7 @@ import android.widget.Button;
 
 
 /**
- * 集合了按键、点击、长点击事件的监听器
+ * 集合了按键、点击、长点击事件的监听器（并组合了事件处理对象）
  *
  */
 class EventListener implements View.OnKeyListener,
@@ -50,17 +50,21 @@ class EventListener implements View.OnKeyListener,
             break;
 
         case R.id.equal:
+        	//如果是=号则计算结果
             mHandler.onEnter();
             break;
 
         default:
             if (view instanceof Button) {
+            	//如果是普通的数字或公式按钮点击事件，取出按钮的文本并显示
                 String text = ((Button) view).getText().toString();
                 if (text.length() >= 2) {
                     // add paren after sin, cos, ln, etc. from buttons
                     text += '(';
                 }
+                //用Handler将文本添加到显示区域
                 mHandler.insert(text);
+                //如果是高级面板的输入事件，那么输入了公式后紧接着返回到基础面板
                 if (mPager != null && mPager.getCurrentItem() == Calculator2.ADVANCED_PANEL) {
                     mPager.setCurrentItem(Calculator2.BASIC_PANEL);
                 }

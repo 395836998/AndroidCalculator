@@ -23,10 +23,17 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Vector;
 
+/**
+ * 保存历史
+ * @author lyanzhang
+ *
+ */
 class History {
     private static final int VERSION_1 = 1;
     private static final int MAX_ENTRIES = 100;
+    //历史明细条目
     Vector<HistoryEntry> mEntries = new Vector<HistoryEntry>();
+    
     int mPos;
     BaseAdapter mObserver;
 
